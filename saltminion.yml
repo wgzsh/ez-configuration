@@ -6,12 +6,13 @@
      ansible.builtin.file:
       path: etc/apt/keyrings/
       state: directory
+      mode: '0755'
 
    - name: Download public key
      ansible.builtin.get_url:
       url: https://packages.broadcom.com/artifactory/api/security/keypair/SaltProjectKey/public
       dest: /etc/apt/keyrings/salt-archive-keyring.pgp
-      mode: '0440'
+      mode: '0644'
 
    - name: Create apt repo target
      ansible.builtin.get_url:
@@ -36,7 +37,7 @@
 
    - name: Copy master.conf
      ansible.builtin.copy:
-      src: https://raw.githubusercontent.com/wgzsh/ez-configuration/refs/heads/main/conf/master.conf
+      src: ./conf/master.conf
       dest: /etc/salt/minion.d/master.conf
       owner: root
       group: root
