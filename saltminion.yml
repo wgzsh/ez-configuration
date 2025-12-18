@@ -1,6 +1,6 @@
 ---
 - name: Configure salt-minion
-  hosts: all
+  hosts: localhost
   tasks:
    - name: Ensure keyrings dir exists
      ansible.builtin.file:
@@ -36,7 +36,7 @@
 
    - name: Copy master.conf
      ansible.builtin.copy:
-      src: ./conf/master.conf
+      src: https://raw.githubusercontent.com/wgzsh/ez-configuration/refs/heads/main/conf/master.conf
       dest: /etc/salt/minion.d/master.conf
       owner: root
       group: root
