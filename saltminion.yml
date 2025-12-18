@@ -34,6 +34,7 @@
      ansible.builtin.file:
       path: /etc/salt/minion.d/
       state: directory
+      mode: '0744'
 
    - name: Copy master.conf
      ansible.builtin.copy:
@@ -47,8 +48,9 @@
      ansible.builtin.service:
       name: salt-minion
       enabled: true
+      state: started
 
-   - name: Start service salt-minion, if not started
+   - name: Restart salt-minion after initial bootstrap
      ansible.builtin.service:
       name: salt-minion
-      state: started
+      state: restarted
