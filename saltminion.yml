@@ -1,0 +1,53 @@
+---
+- name: Configure salt-minion
+  hosts: all
+  tasks:
+   - name: Ensure keyrings dir exists
+     ansible.builtin.file:
+      path: etc/apt/keyrings/
+      state: directory
+
+   - name: Download public key
+     ansible.builtin.get_url:
+      url: https://packages.broadcom.com/artifactory/api/security/keypair/SaltProjectKey/public
+      dest: /etc/apt/keyrings/salt-archive-keyring.pgp
+      mode: '0440'
+
+   - name: Create apt repo target
+     ansible.builtin.get_url:
+      url: https://github.com/saltstack/salt-install-guide/releases/latest/download/salt.sources
+      dest: /etc/apt/sources.list.d/salt.sources
+      mode: '0440'
+
+   - name: Update apt cache
+     ansible.builtin.apt:
+      update_cache: true
+
+   - name: Install salt-minion
+     ansible.builtin.package:
+      name: salt-minion
+      state: present
+      use: apt
+
+   - name: Create minion.d
+     ansible.builtin.file:
+      path: /etc/salt/minion.d/
+      state: directory
+
+   - name: Copy master.conf
+     ansible.builtin.copy:
+      src: ./conf/master.conf
+      dest: /etc/salt/minion.d/master.conf
+      owner: root
+      group: root
+      mode: '0644'
+
+   - name: Enable salt-minion
+     ansible.builtin.service:
+      name: salt-minion
+      enabled: true
+
+   - name: Start service salt-minion, if not started
+     ansible.builtin.service:
+      name: salt-minion
+      state: started
