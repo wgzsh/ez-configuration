@@ -1,0 +1,12 @@
+#cloud-config
+package_update: true
+package_upgrade: false
+
+packages:
+  - git
+  - ansible
+
+runcmd:
+  - git clone https://github.com/wgzsh/ez-configuration.git /opt/ez-configuration
+  - cd /opt/ez-configuration && ansible-playbook saltminion.yml -i localhost, -c local
+
