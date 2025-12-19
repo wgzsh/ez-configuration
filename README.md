@@ -10,8 +10,6 @@ minion that reports to our lab master.
 - `saltminion.yml` &mdash; idempotent Ansible playbook that installs the Salt
   packages, drops the master configuration found in `conf/master.conf`, and
   ensures the minion service is ready to accept jobs.
-- `inventory.ini` &mdash; simple inventory example for running the playbook
-  remotely over SSH. Add or replace hosts as needed.
 - `conf/master.conf` &mdash; Salt minion configuration snippet that points the
   worker at the correct master IP.
 
