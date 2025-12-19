@@ -24,12 +24,6 @@
      ansible.builtin.apt:
       update_cache: true
 
-   - name: Install salt-minion
-     ansible.builtin.package:
-      name: salt-minion
-      state: present
-      use: apt
-
    - name: Create minion.d
      ansible.builtin.file:
       path: /etc/salt/minion.d/
@@ -43,14 +37,9 @@
       owner: root
       group: root
       mode: '0744'
-
-   - name: Enable salt-minion
-     ansible.builtin.service:
+  
+   - name: Install salt-minion
+     ansible.builtin.package:
       name: salt-minion
-      enabled: true
-      state: started
-
-   - name: Restart salt-minion after initial bootstrap
-     ansible.builtin.service:
-      name: salt-minion
-      state: restarted
+      state: present
+      use: apt
