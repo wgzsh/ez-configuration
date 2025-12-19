@@ -37,7 +37,7 @@
       owner: root
       group: root
       mode: '0744'
-  
+
    - name: Install salt-minion
      ansible.builtin.package:
       name: salt-minion
