@@ -24,11 +24,19 @@ get_packages() {
   done
 }
 
-# We want to test that ovs is running, and if br0 exists.
-
 set_ports() {
   ports=(1 2 3 4 5)
-
+  
+  # We should clean up any ports that exist from previous script runs.
+  for port in "${ports[@]}"; do 
+    if ip link show p"$port" | grep p"$port"; then 
+    	ovs-vsctl del-port p"$port" && ip link delete p"$port";
+    else 
+	echo "port p{$port} does not exist"
+    fi 	
+  done;
+  
+  # We should check if there is a br0 interface, to avoid conflicts.
   if ip link show br0 | grep "br0"; then
     echo "br0 exists already"
 
@@ -38,7 +46,7 @@ set_ports() {
       ovs-vsctl add-port br0 p"$i" -- set Interface p"$i" ofport_request="$i"
       ovs-ofctl mod-port br0 p"$i" up
 
-      echo "$i has been created"
+      echo "p$i has been created"
       sleep 1
     done
   else
@@ -51,7 +59,7 @@ set_ports() {
       ovs-vsctl add-port br0 p"$i" -- set Interface p"$i" ofport_request="$i"
       ovs-ofctl mod-port br0 p"$i" up
 
-      echo "$i has been created"
+      echo "p$i has been created"
       sleep 1
     done
   fi
